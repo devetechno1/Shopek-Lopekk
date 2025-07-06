@@ -23,7 +23,7 @@ class AppConfig {
 
   //configure this
   // static String copyright_text =
-  //     "@ Deve Finance " + this_year; //this shows in the splash screen
+  //     "@ Shopek Lopek " + this_year; //this shows in the splash screen
   static const String app_name_ar = "Shopek Lopek";
   static const String app_name_en = "Shopek Lopek";
 
