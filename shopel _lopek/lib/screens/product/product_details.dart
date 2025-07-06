@@ -38,6 +38,7 @@ import '../../repositories/cart_repository.dart';
 import '../../repositories/chat_repository.dart';
 import '../../repositories/product_repository.dart';
 import '../../repositories/wishlist_repository.dart';
+import '../../services/navigation_service.dart';
 import '../../ui_elements/mini_product_card.dart';
 import '../../ui_elements/top_selling_products_card.dart';
 import '../brand_products.dart';
@@ -79,8 +80,9 @@ class _ProductDetailsState extends State<ProductDetails>
   WebViewController controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
     ..enableZoom(false);
-  double webViewHeight = 50.0;
-  late double initHeight = webViewHeight;
+  double? webViewHeight;
+  double height = 100;
+  bool isExpanded = false;
 
   final CarouselSliderController _carouselController =
       CarouselSliderController();
@@ -127,21 +129,6 @@ class _ProductDetailsState extends State<ProductDetails>
   bool _topProductInit = false;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        final value = await controller.runJavaScriptReturningResult(
-            "document.getElementById('scaled-frame').clientHeight");
-        initHeight = double.parse(value.toString());
-        if (webViewHeight < initHeight) {
-          webViewHeight = initHeight;
-        } else {
-          initHeight = webViewHeight;
-        }
-        setState(() {});
-      } catch (e) {
-        print("Error in runJavaScriptReturningResult : $e");
-      }
-    });
     quantityText.text = "$_quantity";
     _ColorAnimationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 0));
@@ -174,10 +161,29 @@ class _ProductDetailsState extends State<ProductDetails>
     });
     fetchAll();
     super.initState();
+    controller.setNavigationDelegate(
+      NavigationDelegate(
+        onNavigationRequest: (request) async {
+          final Uri? uri = Uri.tryParse(request.url);
+          if (uri != null && await canLaunchUrl(uri)) {
+            NavigationService.handleUrls(
+              request.url,
+              callBackDeepLink: Navigator.of(context).pop,
+            );
+          }
+          return NavigationDecision.prevent;
+        },
+      ),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      getDescriptionHeight();
+    });
   }
 
   @override
   void dispose() {
+    controller.clearCache();
+    controller.clearLocalStorage();
     quantityText.dispose();
     _mainScrollController.dispose();
     _variantScrollController.dispose();
@@ -1173,7 +1179,9 @@ class _ProductDetailsState extends State<ProductDetails>
                                 Visibility(
                                   visible: whole_sale_addon_installed.$,
                                   child: _productDetails != null
-                                      ? _productDetails!.wholesale?.isNotEmpty == true
+                                      ? _productDetails!
+                                                  .wholesale?.isNotEmpty ==
+                                              true
                                           ? buildWholeSaleQuantityPrice()
                                           : const SizedBox.shrink()
                                       : ShimmerHelper().buildBasicShimmer(
@@ -1248,7 +1256,7 @@ class _ProductDetailsState extends State<ProductDetails>
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
                                   16.0,
                                   0.0,
                                   8.0,
@@ -2442,47 +2450,82 @@ class _ProductDetailsState extends State<ProductDetails>
         : Container();
   }
 
-  Container buildExpandableDescription() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+  Widget buildExpandableDescription() {
+    return AnimatedContainer(
+      duration:
+          const Duration(milliseconds: AppDimensions.animationDefaultInMillis),
+      width: DeviceInfo(context).width,
+      height: isExpanded ? webViewHeight : min(height, webViewHeight ?? height),
+      alignment: Alignment.topCenter,
+      child: Stack(
         children: [
-          Container(
-            width: DeviceInfo(context).width,
-            height: webViewHeight,
-            child: WebViewWidget(
-              controller: controller,
-            ),
-          ),
-          Btn.basic(
-              onPressed: () async {
-                if (webViewHeight == initHeight) {
-                  webViewHeight = double.parse(
-                    (await controller.runJavaScriptReturningResult(
-                            "document.getElementById('scaled-frame').clientHeight"))
-                        .toString(),
-                  );
-                  // print(webViewHeight);
-                  // print(MediaQuery.of(context).devicePixelRatio);
-
-                  // webViewHeight = (webViewHeight /
-                  //         MediaQuery.of(context).devicePixelRatio) +
-                  // 400;
-                  print(webViewHeight);
-                } else {
-                  webViewHeight = initHeight;
-                }
-                setState(() {});
-              },
-              child: Text(
-                webViewHeight == initHeight
-                    ? LangText(context).local.view_more
-                    : LangText(context).local.less,
-                style: const TextStyle(color: Color(0xff0077B6)),
-              ))
+          WebViewWidget(controller: controller),
+          if ((webViewHeight ?? 0) > height)
+            Positioned.fill(
+              child: Container(
+                alignment: AlignmentDirectional.bottomEnd,
+                decoration: !isExpanded
+                    ? BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0.5, 1],
+                          colors: [
+                            Colors.transparent,
+                            Theme.of(context).primaryColor,
+                          ],
+                        ),
+                      )
+                    : null,
+                child: Btn.basic(
+                  onPressed: viewMore,
+                  child: Text(
+                    isExpanded
+                        ? LangText(context).local.less
+                        : LangText(context).local.view_more,
+                    style: TextStyle(
+                      color: isExpanded ? null : Colors.white,
+                      shadows: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.12),
+                          blurRadius: 6,
+                          spreadRadius: 1,
+                          offset: const Offset(0.0, 3.0),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
         ],
       ),
     );
+  }
+
+  void viewMore() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
+    getDescriptionHeight();
+  }
+
+  Future<void> getDescriptionHeight() async {
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      final String value = (await controller.runJavaScriptReturningResult(
+        "document.getElementById('scaled-frame').clientHeight",
+      ))
+          .toString();
+      if (value.trim() == 'null' && webViewHeight == null) {
+        return await getDescriptionHeight();
+      }
+      webViewHeight = double.parse(value.toString());
+
+      setState(() {});
+    } catch (e) {
+      print("Error in runJavaScriptReturningResult : $e");
+    }
   }
 
   Widget buildTopSellingProductList() {

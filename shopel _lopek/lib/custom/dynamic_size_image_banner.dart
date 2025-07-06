@@ -47,7 +47,7 @@ class _DynamicSizeImageBannerState extends State<DynamicSizeImageBanner> {
       return const SizedBox();
     }
     return InkWell(
-      onTap: () => NavigationService.handleUrls(widget.urlToOpen, context),
+      onTap: () => NavigationService.handleUrls(widget.urlToOpen,context: context),
       child: _aspectRatio == null
           ? const LoadingImageBannerWidget()
           : AspectRatio(

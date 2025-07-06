@@ -69,7 +69,6 @@ class _CartState extends State<_Cart> {
           cartProvider.shopList.firstOrNull?.cartItems?.length ?? 0;
 
       return Scaffold(
-        
         backgroundColor: MyTheme.mainColor,
         appBar: buildAppBar(context),
         body: Stack(
@@ -305,85 +304,76 @@ class _CartState extends State<_Cart> {
                 ],
               ),
             ),
-            Row(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: AppDimensions.paddingSmall),
-                  child: Container(
-                    height: 58,
-                    width: (MediaQuery.of(context).size.width - 48),
-                    // width: (MediaQuery.of(context).size.width - 48) * (2 / 3),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: cartProvider.shopList.isNotEmpty
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey,
-                      ),
-                      borderRadius: app_language_rtl.$!
-                          ? const BorderRadius.only(
-                              topLeft: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                              bottomLeft: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                              topRight: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                              bottomRight: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                            )
-                          : const BorderRadius.only(
-                              topLeft: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                              bottomLeft: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                              topRight: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                              bottomRight: Radius.circular(
-                                  AppDimensions.radiusHalfSmall),
-                            ),
-                    ),
-                    child: Btn.basic(
-                      minWidth: MediaQuery.of(context).size.width,
-                      color: cartProvider.shopList.isNotEmpty
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey,
-                      shape: app_language_rtl.$!
-                          ? const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(
-                                    AppDimensions.radiusHalfSmall),
-                                bottomLeft: Radius.circular(
-                                    AppDimensions.radiusHalfSmall),
-                                topRight: Radius.circular(0.0),
-                                bottomRight: Radius.circular(0.0),
-                              ),
-                            )
-                          : const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(0.0),
-                                bottomLeft: Radius.circular(0.0),
-                                topRight: Radius.circular(
-                                    AppDimensions.radiusHalfSmall),
-                                bottomRight: Radius.circular(
-                                    AppDimensions.radiusHalfSmall),
-                              ),
-                            ),
-                      child: Text(
-                        AppLocalizations.of(context)!.proceed_to_shipping_ucf,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      onPressed: () {
-                        cartProvider.onPressProceedToShipping(context);
-                      },
-                    ),
-                  ),
+            Container(
+              height: 58,
+              width: (MediaQuery.of(context).size.width - 48),
+              // width: (MediaQuery.of(context).size.width - 48) * (2 / 3),
+              margin: const EdgeInsets.only(top: AppDimensions.paddingSmall),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: cartProvider.shopList.isNotEmpty
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey,
                 ),
-              ],
-            )
+                borderRadius: app_language_rtl.$!
+                    ? const BorderRadius.only(
+                        topLeft: Radius.circular(AppDimensions.radiusHalfSmall),
+                        bottomLeft:
+                            Radius.circular(AppDimensions.radiusHalfSmall),
+                        topRight:
+                            Radius.circular(AppDimensions.radiusHalfSmall),
+                        bottomRight:
+                            Radius.circular(AppDimensions.radiusHalfSmall),
+                      )
+                    : const BorderRadius.only(
+                        topLeft: Radius.circular(AppDimensions.radiusHalfSmall),
+                        bottomLeft:
+                            Radius.circular(AppDimensions.radiusHalfSmall),
+                        topRight:
+                            Radius.circular(AppDimensions.radiusHalfSmall),
+                        bottomRight:
+                            Radius.circular(AppDimensions.radiusHalfSmall),
+                      ),
+              ),
+              child: Btn.basic(
+                minWidth: MediaQuery.of(context).size.width,
+                color: cartProvider.shopList.isNotEmpty
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+                shape: app_language_rtl.$!
+                    ? const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft:
+                              Radius.circular(AppDimensions.radiusHalfSmall),
+                          bottomLeft:
+                              Radius.circular(AppDimensions.radiusHalfSmall),
+                          topRight: Radius.circular(0.0),
+                          bottomRight: Radius.circular(0.0),
+                        ),
+                      )
+                    : const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(0.0),
+                          bottomLeft: Radius.circular(0.0),
+                          topRight:
+                              Radius.circular(AppDimensions.radiusHalfSmall),
+                          bottomRight:
+                              Radius.circular(AppDimensions.radiusHalfSmall),
+                        ),
+                      ),
+                child: Text(
+                  AppLocalizations.of(context)!.proceed_to_shipping_ucf,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700),
+                ),
+                onPressed: () {
+                  cartProvider.onPressProceedToShipping(context);
+                },
+              ),
+            ),
           ],
         ),
       ),

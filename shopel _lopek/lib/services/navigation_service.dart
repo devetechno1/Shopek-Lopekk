@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
@@ -9,21 +11,30 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class NavigationService {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  static Future<void> handleUrls(String? url, [BuildContext? context]) async {
+  static Future<void> handleUrls(
+    String? url, {
+    BuildContext? context,
+    FutureOr<void> Function()? callBackDeepLink,
+    FutureOr<void> Function()? callBackURL,
+    FutureOr<void> Function()? callBackError,
+  }) async {
     if (url?.isNotEmpty != true) return;
     context ??= OneContext().context!;
     final Uri? uri = Uri.tryParse(url ?? '');
     try {
       if (uri?.hasAbsolutePath ?? false) {
         if (uri?.host == AppConfig.DOMAIN_PATH) {
+          await callBackDeepLink?.call();
           context.push(uri!.path);
         } else {
+          await callBackURL?.call();
           await launchUrl(uri!);
         }
       } else {
         throw AppLocalizations.of(context)!.invalidURL;
       }
     } catch (e) {
+      await callBackError?.call();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );

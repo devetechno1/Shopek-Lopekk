@@ -61,7 +61,7 @@ class UpdateScreen extends StatelessWidget {
                   ),
                   onPressed: () => NavigationService.handleUrls(
                     updateData.storeLink,
-                    context,
+                     context: context,
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
@@ -95,7 +95,7 @@ class UpdateScreen extends StatelessWidget {
 
   void navigateToHome(BuildContext context) {
     final GoRouter goRouter = GoRouter.of(context);
-    final String newPath = goRouter.state?.uri.queryParameters['url'] ?? '/';
+    final String newPath = goRouter.state.uri.queryParameters['url'] ?? '/';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       goRouter.go(newPath, extra: {'skipUpdate': true});
     });

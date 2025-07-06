@@ -67,7 +67,7 @@ class HomeBannersList extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppDimensions.radiusNormal),
                 child: InkWell(
-                  onTap: () => NavigationService.handleUrls(i.url, context),
+                  onTap: () => NavigationService.handleUrls(i.url, context: context),
                   child: AIZImage.radiusImage(i.photo, 6),
                 ),
               ),

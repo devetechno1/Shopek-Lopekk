@@ -13,7 +13,8 @@ class PopupBannerDialog extends StatelessWidget {
     return Align(
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-            maxWidth: AppDimensions.constrainedBoxDefaultWidth),
+          maxWidth: AppDimensions.constrainedBoxDefaultWidth,
+        ),
         child: Dialog(
           backgroundColor: Colors.white,
           shape: const RoundedRectangleBorder(),
@@ -64,22 +65,28 @@ class PopupBannerDialog extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppDimensions.paddingDefault,
                 ),
-                child: Text(
-                  popupBannerModel.title ?? '',
-                  textDirection: (popupBannerModel.title ?? '').direction,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: Text(
+                    popupBannerModel.title ?? '',
+                    textDirection: (popupBannerModel.title ?? '').direction,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingSmall),
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: AppDimensions.paddingDefault),
-                child: Text(
-                  popupBannerModel.summary ?? '',
-                  textDirection: (popupBannerModel.summary ?? '').direction,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: Text(
+                    popupBannerModel.summary ?? '',
+                    textDirection: (popupBannerModel.summary ?? '').direction,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ),
               const SizedBox(height: AppDimensions.paddingDefault),
