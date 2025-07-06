@@ -1,4 +1,4 @@
-package com.devefinance
+package com.shopeklopek
 
 import io.flutter.embedding.android.FlutterActivity
 
