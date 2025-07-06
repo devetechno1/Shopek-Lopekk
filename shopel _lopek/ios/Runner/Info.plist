@@ -39,7 +39,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>devefinance.com</string>
+			<string>shopeklopek.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>https</string>
@@ -49,7 +49,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>devefinance.com</string>
+			<string>shopeklopek.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>http</string>
