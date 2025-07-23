@@ -12,8 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
 
 class FlashSale extends StatelessWidget {
-  const FlashSale({super.key, required this.isCircle});
+  const FlashSale({super.key, required this.isCircle, this.backgroundColor});
   final bool isCircle;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,8 @@ class FlashSale extends StatelessWidget {
                               const Offset(0, 3), // changes position of shadow
                         ),
                       ],
-                      color: AppConfig.businessSettingsData.flashDealBgColor ??
+                      color: backgroundColor ??
+                          AppConfig.businessSettingsData.flashDealBgColor ??
                           const Color(0xFFF9F8F8),
                       borderRadius: context.isPhoneWidth
                           ? null
