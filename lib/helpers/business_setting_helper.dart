@@ -94,7 +94,7 @@ class BusinessSettingHelper {
         date: lastUpdateTranslation.$,
       ),
     );
-    if (status is Success<Map<String, dynamic>>) {
+    if (status is Success<Map<String, dynamic>> && status.data['success'] == true) {
       final String lastDate = status.data['data']['date'] ?? '';
       if (status.data['data']['lang'].isNotEmpty) {
         final Map<String, dynamic> newTranslations =
