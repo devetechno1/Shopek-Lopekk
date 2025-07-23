@@ -10,8 +10,8 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>webcredentials:devefinance.com</string>
-		<string>applinks:devefinance.com</string>
+		<string>webcredentials:shopeklopek.com</string>
+		<string>applinks:shopeklopek.com</string>
 	</array>
 </dict>
 </plist>

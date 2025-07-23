@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class MyTheme {
   /*configurable colors stars*/
   static const Color mainColor = Color(0xffF2F1F6);
-  static Color primaryColor = const Color(0xff2c2c2c);
-  static Color secondaryColor = const Color(0xff2c2c2c);
+  static Color primaryColor = const Color(0xff6ab63d);
+  static Color secondaryColor = const Color(0xfff19933);
   static const Color accent_color_shadow =
       Color.fromRGBO(229, 65, 28, .40); // this color is a dropshadow of
   static Color soft_accent_color = const Color.fromRGBO(254, 234, 209, 1);
