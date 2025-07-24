@@ -86,8 +86,10 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     } else {
       _phone = user_phone.$.trim();
     }
-    initialValue = await PhoneNumber.getRegionInfoFromPhoneNumber(_phone);
-    _phoneController.text = initialValue.parseNumber().replaceAll("+", '');
+    if (_phone.trim().isNotEmpty) {
+      initialValue = await PhoneNumber.getRegionInfoFromPhoneNumber(_phone);
+      _phoneController.text = initialValue.parseNumber().replaceAll("+", '');
+    }
     _isValidPhoneNumber = _phoneController.text.isNotEmpty;
     setState(() {});
   }
