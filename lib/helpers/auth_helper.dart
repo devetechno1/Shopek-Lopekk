@@ -5,7 +5,7 @@ import '../data_model/login_response.dart';
 import 'shared_value_helper.dart';
 
 class AuthHelper {
-  setUserData(LoginResponse loginResponse) {
+  void setUserData(LoginResponse loginResponse) {
     if (loginResponse.result == true) {
       SystemConfig.systemUser = loginResponse.user;
       is_logged_in.$ = true;

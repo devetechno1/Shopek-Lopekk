@@ -1,8 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_value/shared_value.dart';
 
 import '../app_config.dart';
+
+late final Box<Map> localeTranslation;
+
 
 final SharedValue<bool> is_logged_in = SharedValue(
   value: false, // initial value

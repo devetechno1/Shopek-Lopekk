@@ -102,10 +102,7 @@ class _ClassicScreenState extends State<ClassicScreen>
                               HomeCarouselSlider(homeData: homeData),
                               const SizedBox(height: 16),
 
-                              const FlashSale(
-                                isCircle: true,
-                                backgroundColor: Colors.white,
-                              ),
+                              const FlashSale(isCircle: true, backgroundColor: Colors.white,),
                             ]),
                           ),
                           //move banner
@@ -113,7 +110,7 @@ class _ClassicScreenState extends State<ClassicScreen>
                             delegate: SliverChildListDelegate([
                               // Padding(
                               //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              //   child: Image.network("https://shopeklopek.com/public/uploads/all/Ryto4mRZFjxR8INkhLs1DFyX6eoamXKIxXEDFBZM.png"),//TODO:# banner
+                              //   child: Image.network("https://devefinance.com/public/uploads/all/Ryto4mRZFjxR8INkhLs1DFyX6eoamXKIxXEDFBZM.png"),//TODO:# banner
                               // ),
                               TodaysDealProductsWidget(
                                 homePresenter: homeData,

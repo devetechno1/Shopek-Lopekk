@@ -363,8 +363,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                             bottom: AppDimensions.paddingSmall),
                         child: Row(
                           children: [
-                            Text(
-                                "${'reason_ucf'.tr(context: context)} *",
+                            Text("${'reason_ucf'.tr(context: context)} *",
                                 style: const TextStyle(
                                     color: MyTheme.font_grey, fontSize: 12)),
                             _showReasonWarning
@@ -373,7 +372,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       left: 8.0,
                                     ),
                                     child: Text(
-                                        'reason_cannot_be_empty'.tr(context: context),
+                                        'reason_cannot_be_empty'
+                                            .tr(context: context),
                                         style: const TextStyle(
                                             color: Colors.red, fontSize: 12)),
                                   )
@@ -392,7 +392,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                             maxLines: null,
                             keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
-                                hintText: 'enter_reason_ucf'.tr(context: context),
+                                hintText:
+                                    'enter_reason_ucf'.tr(context: context),
                                 hintStyle: const TextStyle(
                                     fontSize: 12.0,
                                     color: MyTheme.textfield_grey),
@@ -1262,100 +1263,65 @@ class _OrderDetailsState extends State<OrderDetails> {
                   const EdgeInsets.only(bottom: AppDimensions.paddingSmall),
               child: Row(
                 children: [
-                  _orderDetails!.shipping_address != null
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _orderDetails!.shipping_address!.name != null
-                                ? Text(
-                                    "${'name_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.name}",
-                                    maxLines: 3,
-                                    style: const TextStyle(
-                                      color: MyTheme.grey_153,
-                                    ),
-                                  )
-                                : Container(),
-                            _orderDetails!.shipping_address!.email != null
-                                ? Text(
-                                    "${'email_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.email}",
-                                    maxLines: 3,
-                                    style: const TextStyle(
-                                      color: MyTheme.grey_153,
-                                    ),
-                                  )
-                                : Container(),
-                            Text(
-                              "${'address_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.address}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                  Expanded(
+                    flex: 4,
+                    child: _orderDetails!.shipping_address != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _AddressText(
+                                title: 'name_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.name,
                               ),
-                            ),
-                            Text(
-                              "${'city_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.city}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'email_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.email,
                               ),
-                            ),
-                            Text(
-                              "${'country_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.country}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'address_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.address,
                               ),
-                            ),
-                            Text(
-                              "${'state_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.state}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'city_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.city,
                               ),
-                            ),
-                            Text(
-                              "${'phone_ucf'.tr(context: context)}: ${_orderDetails!.shipping_address!.phone ?? ''}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'state_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.state,
                               ),
-                            ),
-                            Text(
-                              "${'postal_code'.tr(context: context)}: ${_orderDetails!.shipping_address!.postal_code ?? ''}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'country_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.country,
                               ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _orderDetails!.pickupPoint?.name != null
-                                ? Text(
-                                    "${'name_ucf'.tr(context: context)}: ${_orderDetails!.pickupPoint!.name}",
-                                    maxLines: 3,
-                                    style: const TextStyle(
-                                      color: MyTheme.grey_153,
-                                    ),
-                                  )
-                                : Container(),
-                            Text(
-                              "${'address_ucf'.tr(context: context)}: ${_orderDetails!.pickupPoint?.address}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'phone_ucf'.tr(context: context),
+                                body: _orderDetails?.shipping_address?.phone,
                               ),
-                            ),
-                            Text(
-                              "${'phone_ucf'.tr(context: context)}: ${_orderDetails!.pickupPoint!.phone}",
-                              maxLines: 3,
-                              style: const TextStyle(
-                                color: MyTheme.grey_153,
+                              _AddressText(
+                                title: 'postal_code'.tr(context: context),
+                                body: _orderDetails
+                                    ?.shipping_address?.postal_code,
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _AddressText(
+                                title: 'name_ucf'.tr(context: context),
+                                body: _orderDetails?.pickupPoint?.name,
+                              ),
+                              _AddressText(
+                                title: 'address_ucf'.tr(context: context),
+                                body: _orderDetails?.pickupPoint?.address,
+                              ),
+                              _AddressText(
+                                title: 'phone_ucf'.tr(context: context),
+                                body: _orderDetails?.pickupPoint?.phone,
+                              ),
+                            ],
+                          ),
+                  ),
                   const Spacer(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1368,9 +1334,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
                       ),
-                      const SizedBox(
-                        height: 8,
-                      ),
+                      const SizedBox(height: 8),
                       Btn.basic(
                           // shape: RoundedRectangleBorder(side: Border()),
 
@@ -1594,7 +1558,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ),
                     ],
                   )
-                : Container()
+                : const SizedBox()
           ],
         ),
       ),
@@ -1698,6 +1662,25 @@ class _OrderDetailsState extends State<OrderDetails> {
           color: paymentStatus == "paid" ? Colors.green : Colors.red),
       child: Icon(paymentStatus == "paid" ? Icons.check : Icons.clear,
           color: Colors.white, size: 10),
+    );
+  }
+}
+
+class _AddressText extends StatelessWidget {
+  const _AddressText({
+    required this.title,
+    required this.body,
+  });
+  final String title;
+  final String? body;
+
+  @override
+  Widget build(BuildContext context) {
+    if (body?.trim().isNotEmpty != true) return const SizedBox.shrink();
+    return Text(
+      "$title: $body",
+      maxLines: 3,
+      style: const TextStyle(color: MyTheme.grey_153),
     );
   }
 }

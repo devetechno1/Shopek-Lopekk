@@ -296,7 +296,7 @@ class _FlashDealListState extends State<FlashDealList> {
     return Container(
       margin: const EdgeInsetsDirectional.only(start: 10),
       height: 50,
-      width: 136,
+      width: 150,
       decoration: BoxDecoration(
         color: const Color(0xffF6F7F8),
         borderRadius: BorderRadius.circular(AppDimensions.radiusHalfSmall),
@@ -308,20 +308,22 @@ class _FlashDealListState extends State<FlashDealList> {
           const SizedBox(
             width: 2,
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(
-                AppDimensions.radiusSmallExtra), // Rounding the image corners
-            child: Container(
-              height: 46,
-              width: 44,
-              child: FadeInImage(
-                placeholder: const AssetImage(AppImages.placeholder),
-                image: NetworkImage(
-                  flashDealResponse.flashDeals[flashDealIndex].products
-                      .products[productIndex].image,
+          Flexible(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(
+                  AppDimensions.radiusSmallExtra), // Rounding the image corners
+              child: Container(
+                height: 46,
+                width: 44,
+                child: FadeInImage(
+                  placeholder: const AssetImage(AppImages.placeholder),
+                  image: NetworkImage(
+                    flashDealResponse.flashDeals[flashDealIndex].products
+                        .products[productIndex].image,
+                  ),
+                  fit: BoxFit
+                      .cover, // Ensures the image fits within the rounded corners
                 ),
-                fit: BoxFit
-                    .cover, // Ensures the image fits within the rounded corners
               ),
             ),
           ),

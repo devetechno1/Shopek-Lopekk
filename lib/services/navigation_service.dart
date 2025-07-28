@@ -25,7 +25,7 @@ class NavigationService {
       if (uri?.hasAbsolutePath ?? false) {
         if (uri?.host == AppConfig.DOMAIN_PATH) {
           await callBackDeepLink?.call();
-          context.push(uri!.path);
+          context.push(uri!.paramPath);
         } else {
           await callBackURL?.call();
           await launchUrl(uri!);
@@ -70,4 +70,8 @@ class NavigationService {
 
 
   */
+}
+
+extension URIExtension on Uri {
+  String get paramPath => "$path${hasQuery ? '?$query' : ''}";
 }

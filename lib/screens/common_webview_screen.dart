@@ -35,7 +35,10 @@ class _CommonWebviewScreenState extends State<CommonWebviewScreen> {
           onPageFinished: (page) {},
         ),
       )
-      ..loadRequest(Uri.parse(widget.url));
+      ..loadRequest(
+        Uri.parse(widget.url),
+        headers: {if (app_language.$ != null) "App-Language": app_language.$!},
+      );
   }
 
   TextDirection get direction =>

@@ -12,6 +12,8 @@ class ThemeProvider with ChangeNotifier {
     MyTheme.primaryColor = this.primary;
     MyTheme.secondaryColor = this.secondary;
 
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => notifyListeners(),
+    );
   }
 }

@@ -11,7 +11,6 @@ import 'package:active_ecommerce_cms_demo_app/screens/home/widgets/flash_sale.da
 import 'package:active_ecommerce_cms_demo_app/screens/home/widgets/product_loading_container.dart';
 import 'package:active_ecommerce_cms_demo_app/screens/home/widgets/today_deal.dart';
 import 'package:flutter/material.dart';
-import '../../../custom/home_banners/home_banner.dart';
 import '../../../custom/home_banners/home_banners_list.dart';
 import '../../../custom/home_carousel_slider.dart';
 import '../../../custom/pirated_widget.dart';
@@ -113,7 +112,7 @@ class _MetroScreenState extends State<MetroScreen>
                             delegate: SliverChildListDelegate([
                               // Padding(
                               //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              //   child: Image.network("https://shopeklopek.com/public/uploads/all/Ryto4mRZFjxR8INkhLs1DFyX6eoamXKIxXEDFBZM.png"),//TODO:# banner
+                              //   child: Image.network("https://devefinance.com/public/uploads/all/Ryto4mRZFjxR8INkhLs1DFyX6eoamXKIxXEDFBZM.png"),//TODO:# banner
                               // ),
                               TodaysDealProductsWidget(
                                 homePresenter: homeData,

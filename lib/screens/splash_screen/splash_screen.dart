@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  "VW ${AppConfig.deveVersion}",
+                  "BV ${AppConfig.backendVersion}", /// Backend version
                   style: TextStyle(
                     // fontWeight: FontWeight.bold,
                     fontSize: 10.0,
@@ -39,7 +39,7 @@ class SplashScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  "VA ${AppConfig.VersionMobile}",
+                  "AV ${AppConfig.mobileVersion}", /// App version
                   style: TextStyle(
                     // fontWeight: FontWeight.bold,
                     fontSize: 10.0,

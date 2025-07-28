@@ -54,19 +54,18 @@ class _TopSellingProductsCardState extends State<TopSellingProductsCard> {
             ]),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-          AspectRatio(
-            aspectRatio: 1,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(AppDimensions.radiusHalfSmall),
-                  right: Radius.zero),
-              child: FadeInImage.assetNetwork(
-                placeholder: AppImages.placeholder,
-                image: widget.image!,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          Container(
+              width: 90,
+              height: 90,
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.horizontal(
+                      left: Radius.circular(AppDimensions.radiusHalfSmall),
+                      right: Radius.zero),
+                  child: FadeInImage.assetNetwork(
+                    placeholder: AppImages.placeholder,
+                    image: widget.image!,
+                    fit: BoxFit.cover,
+                  ))),
           Flexible(
             child: Container(
               padding: const EdgeInsets.only(
@@ -78,18 +77,22 @@ class _TopSellingProductsCardState extends State<TopSellingProductsCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.name!,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: const TextStyle(
-                        color: Color(0xff6B7377),
-                        fontFamily: 'Public Sans',
-                        fontSize: 12,
-                        height: 1.6,
-                        fontWeight: FontWeight.normal),
+                  Container(
+                    //color:Colors.blue,
+                    child: Text(
+                      widget.name!,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                          color: Color(0xff6B7377),
+                          fontFamily: 'Public Sans',
+                          fontSize: 12,
+                          height: 1.6,
+                          fontWeight: FontWeight.normal),
+                    ),
                   ),
-                  Flexible(
+                  Container(
+                    //color: Colors.green,
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       alignment: WrapAlignment.spaceBetween,
@@ -107,7 +110,9 @@ class _TopSellingProductsCardState extends State<TopSellingProductsCard> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(width: 18),
+                        const SizedBox(
+                          width: 18,
+                        ),
                         widget.has_discount!
                             ? Text(
                                 SystemConfig.systemCurrency!.code != null

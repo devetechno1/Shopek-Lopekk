@@ -1262,7 +1262,7 @@ class _ProfileState extends State<Profile> {
               if (is_logged_in.$)
                 onTapLogout(context);
               else
-                context.push("/users/login");
+                context.push("/login");
             },
           ),
         ],

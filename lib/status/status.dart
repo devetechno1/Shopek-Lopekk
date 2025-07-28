@@ -2,7 +2,8 @@ export 'errors/failure.dart';
 export 'success/success.dart';
 
 abstract class Status<T> {
-  const Status();
+  final T? data;
+  const Status([this.data]);
 }
 
 // class Loading extends Status {

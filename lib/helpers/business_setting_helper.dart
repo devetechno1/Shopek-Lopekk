@@ -11,13 +11,19 @@ import '../app_config.dart';
 import '../data_model/business_settings/business_settings.dart';
 import '../data_model/language_list_response.dart';
 import '../locale/custom_localization.dart';
-import '../main.dart';
 import '../repositories/language_repository.dart';
 
 class BusinessSettingHelper {
   Future<void> setBusinessSettingData() async {
-    final BusinessSettingListResponse businessLists =
-        await BusinessSettingRepository().getBusinessSettingList();
+    final Status<BusinessSettingListResponse> status =
+        await executeAndHandleErrors(
+      () => BusinessSettingRepository().getBusinessSettingList(),
+    );
+    if (status is Failure<BusinessSettingListResponse>) return;
+
+    status as Success<BusinessSettingListResponse>;
+
+    final BusinessSettingListResponse businessLists = status.data;
     final Map<String, dynamic> map = {};
 
     businessLists.data
@@ -27,8 +33,14 @@ class BusinessSettingHelper {
   }
 
   static Future<void> setInitLang() async {
-    final LanguageListResponse langs =
-        await LanguageRepository().getLanguageList();
+    final Status<LanguageListResponse> status = await executeAndHandleErrors(
+      () => LanguageRepository().getLanguageList(),
+    );
+    if (status is Failure<LanguageListResponse>) return;
+
+    status as Success<LanguageListResponse>;
+
+    final LanguageListResponse langs = status.data;
 
     if (langs.success != true) return;
 
@@ -94,7 +106,8 @@ class BusinessSettingHelper {
         date: lastUpdateTranslation.$,
       ),
     );
-    if (status is Success<Map<String, dynamic>> && status.data['success'] == true) {
+    if (status is Success<Map<String, dynamic>> &&
+        status.data['success'] == true) {
       final String lastDate = status.data['data']['date'] ?? '';
       if (status.data['data']['lang'].isNotEmpty) {
         final Map<String, dynamic> newTranslations =

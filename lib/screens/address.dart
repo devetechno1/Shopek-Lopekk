@@ -78,9 +78,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   Future fetchAll([bool isRefresh = false]) async {
     await fetchShippingAddressList(isRefresh);
-    if (_shippingAddressList.isNotEmpty) {
-      makeDefaultAddress(_shippingAddressList.last.id);
-    }
+    makeInitDefaultAddress();
 
     setState(() {});
   }
@@ -297,6 +295,26 @@ class _AddressScreenState extends State<AddressScreen> {
       }
     }
     if (!hasDefault) onAddressSwitch(id);
+  }
+
+  void makeInitDefaultAddress() {
+    if (_shippingAddressList.isNotEmpty) {
+      final Set<res.Address> list = {};
+      for (res.Address e in _shippingAddressList) {
+        if (e.location_available == true) {
+          list.add(e);
+          if (e.set_default == 1) return;
+        }
+      }
+      res.Address? defaultAddress;
+      if (list.isNotEmpty) {
+        defaultAddress = list.last;
+      } else {
+        defaultAddress = _shippingAddressList.last;
+      }
+
+      onAddressSwitch(defaultAddress.id);
+    }
   }
 
   @override

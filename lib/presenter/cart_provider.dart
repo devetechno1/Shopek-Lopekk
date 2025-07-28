@@ -482,6 +482,7 @@ class CartProvider extends ChangeNotifier {
         cartDeleteResponse.message,
       );
     }
+    // _shopList[sellerIndex].cartItems![itemIndex].isLoading = false;
     notifyListeners();
   }
 

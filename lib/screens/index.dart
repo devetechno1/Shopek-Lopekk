@@ -1,6 +1,5 @@
 import 'package:active_ecommerce_cms_demo_app/helpers/addons_helper.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/auth_helper.dart';
-import 'package:active_ecommerce_cms_demo_app/helpers/business_setting_helper.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/check_internet.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/system_config.dart';
@@ -22,7 +21,7 @@ class Index extends StatefulWidget {
 
 class _IndexState extends State<Index> {
   Future<String?> getSharedValueHelperData() async {
-    await BusinessSettingHelper.setInitLang();
+    // await BusinessSettingHelper.setInitLang();
     Provider.of<ThemeProvider>(context, listen: false).changeAppColors(
       primary: AppConfig.businessSettingsData.primaryColor,
       secondary: AppConfig.businessSettingsData.secondaryColor,
@@ -60,7 +59,7 @@ class _IndexState extends State<Index> {
       SystemConfig.isShownSplashScreen = true;
       // Provider.of<LocaleProvider>(context, listen: false)
       //     .setLocale(app_mobile_language.$!);
-      setState(() {});
+      if (mounted) setState(() {});
     });
     super.initState();
   }

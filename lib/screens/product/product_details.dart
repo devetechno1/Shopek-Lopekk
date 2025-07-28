@@ -434,13 +434,13 @@ class _ProductDetailsState extends State<ProductDetails>
     //   // ToastComponent.showDialog('common_login_warning'.tr(context: context), context,
     //   //     gravity: Toast.center, duration: Toast.lengthLong);
     //   //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-    //   context?.go("/users/login");
+    //   context?.go("/login");
     //   return;
     // }
 
     if (!AppConfig.businessSettingsData.guestCheckoutStatus) {
       if (is_logged_in.$ == false) {
-        context.push("/users/login");
+        context.push("/login");
         return;
       }
     }
