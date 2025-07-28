@@ -37,85 +37,87 @@ class _CustomErrorWidgetState extends State<CustomErrorWidget> {
     } else {
       error = widget.errorMessage.toString();
     }
-    return PopScope(
-      canPop: widget.canPop,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.paddingDefault),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: AppDimensions.paddingDefault,
-            children: [
-              TweenAnimationBuilder(
-                tween: Tween<Offset>(
-                  begin: Offset(0, _goingUp ? 0 : -0.07),
-                  end: Offset(0, _goingUp ? -0.07 : 0),
+    return Scaffold(
+      body: PopScope(
+        canPop: widget.canPop,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimensions.paddingDefault),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: AppDimensions.paddingDefault,
+              children: [
+                TweenAnimationBuilder(
+                  tween: Tween<Offset>(
+                    begin: Offset(0, _goingUp ? 0 : -0.07),
+                    end: Offset(0, _goingUp ? -0.07 : 0),
+                  ),
+                  duration: const Duration(milliseconds: 700),
+                  curve: Curves.easeInOut,
+                  onEnd: () {
+                    setState(() {
+                      _goingUp = !_goingUp;
+                    });
+                  },
+                  builder: (context, offset, child) {
+                    return Transform.translate(
+                      offset: Offset(0, offset.dy * 100),
+                      child: child,
+                    );
+                  },
+                  child: Image.asset(AppImages.oops),
                 ),
-                duration: const Duration(milliseconds: 700),
-                curve: Curves.easeInOut,
-                onEnd: () {
-                  setState(() {
-                    _goingUp = !_goingUp;
-                  });
-                },
-                builder: (context, offset, child) {
-                  return Transform.translate(
-                    offset: Offset(0, offset.dy * 100),
-                    child: child,
-                  );
-                },
-                child: Image.asset(AppImages.oops),
-              ),
-              Text(
-                "oops".tr(context: context),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  "oops".tr(context: context),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                !AppConfig.isDebugMode || widget.errorMessage == null
-                    ? "some_things_went_wrong".tr(context: context)
-                    : error,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                  fontSize: 16,
+                Text(
+                  !AppConfig.isDebugMode || widget.errorMessage == null
+                      ? "some_things_went_wrong".tr(context: context)
+                      : error,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              if (widget.onTap != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Btn.minWidthFixHeight(
-                    minWidth: 250,
-                    height: 30,
-                    color: Theme.of(context).primaryColor,
+                if (widget.onTap != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Btn.minWidthFixHeight(
+                      minWidth: 250,
+                      height: 30,
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        "try_again".tr(context: context),
+                        //'close_all_capital'.tr(context: context),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: widget.onTap,
+                    ),
+                  ),
+                if (widget.canGoHome)
+                  TextButton(
+                    onPressed: () => context.go("/"),
                     child: Text(
-                      "try_again".tr(context: context),
-                      //'close_all_capital'.tr(context: context),
+                      "go_home".tr(context: context),
                       style: const TextStyle(
+                        decoration: TextDecoration.underline,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
-                    onPressed: widget.onTap,
                   ),
-                ),
-              if (widget.canGoHome)
-                TextButton(
-                  onPressed: () => context.go("/"),
-                  child: Text(
-                    "go_home".tr(context: context),
-                    style: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
