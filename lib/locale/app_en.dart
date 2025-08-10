@@ -1,4 +1,17 @@
 const Map<String, String> enLangs = {
+  "locationIsDenied": "Location permission is denied.",
+  "locationIsDeniedPermanently":
+      "Location permission is permanently denied. Please enable it from Settings.",
+  "pleaseGoToVerifyYourLocation": "Please verify your location.",
+  "locationNotAccessed": "Location access is not enabled.",
+  "goToSetting": "Go to Settings",
+  "change_default_address_make_cart_empty":
+      "Changing the default address will clear the cart",
+  "pkg_price": "Package Price",
+  "wholesale_pkg_name": "Wholesale Package Name",
+  "pkg_quantity": "Quantity in package",
+  "in_stock": "In stock",
+  "quantity": "Quantity",
   "add_default_address": "You have to add a default address",
   "is_loading": "is loading...",
   "change_default_before_delete":

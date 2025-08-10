@@ -23,6 +23,8 @@ class Loading {
     );
   }
 
+  static bool get isLoading => _context != null && _context!.mounted;
+
   static close() {
     if (Loading._context != null) {
       Navigator.of(Loading._context!).pop();

@@ -115,6 +115,7 @@ class _ProductReviewsState extends State<ProductReviews> {
     if (reviewSubmitResponse.result == false) {
       ToastComponent.showDialog(
         reviewSubmitResponse.message,
+        isError: true,
       );
       return;
     }

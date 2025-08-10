@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension NumEx on num? {
   String? padLeft(int width, [String padding = '0']) {
     return this?.toString().padLeft(width, padding);
@@ -9,4 +11,15 @@ extension NumEx on num? {
     final String minutes = (this! / 60).floor().padLeft(2)!;
     return '$minutes:$seconds';
   }
+
+  String get locale => custom('#.###############', Intl.defaultLocale);
+
+  String custom([String? newPattern, String? locale]) {
+    return NumberFormat(newPattern, locale).format(this);
+  }
+
+  String customLocale(String locale) => custom(null, locale);
+  String localeCustomPattern(String pattern) => custom(pattern);
+
+  String get withSeparator => localeCustomPattern('#,##0.##');
 }

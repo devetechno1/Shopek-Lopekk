@@ -128,6 +128,12 @@ class _ClassicScreenState extends State<ClassicScreen>
                               isBannersInitial: homeData.isBannerOneInitial,
                             ),
                           ),
+                          //  SliverToBoxAdapter(
+                          //   child: HomeBannersListCircle(
+                          //     bannersImagesList: homeData.bannerOneImageList,
+                          //     isBannersInitial: homeData.isBannerOneInitial,
+                          //   ),
+                          // ),
                           //featuredProducts-----------------------------
                           const FeaturedProductsListSliver(),
                           //BannerList---------------------

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../app_config.dart';
 import '../../repositories/address_repository.dart';
@@ -60,10 +61,12 @@ class _PasswordForgetState extends State<PasswordForget> {
       );
       return;
     }
-
-    final passwordForgetResponse = await AuthRepository()
-        .getPasswordForgetResponse(
-            _send_code_by == 'email' ? email : _phone, _send_code_by);
+    final passwordForgetResponse =
+        await AuthRepository().getPasswordForgetResponse(
+      _send_code_by == 'email' ? email : _phone,
+      _send_code_by,
+      await SmsAutoFill().getAppSignature,
+    );
 
     if (passwordForgetResponse.result == false) {
       ToastComponent.showDialog(
@@ -145,7 +148,8 @@ class _PasswordForgetState extends State<PasswordForget> {
                                 });
                               },
                               child: Text(
-                                'or_send_code_via_phone_number'.tr(context: context),
+                                'or_send_code_via_phone_number'
+                                    .tr(context: context),
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontStyle: FontStyle.italic,
@@ -221,8 +225,8 @@ class _PasswordForgetState extends State<PasswordForget> {
                   ),
                 ),
               Padding(
-                padding:
-                    const EdgeInsets.only(top: AppDimensions.paddingVeryExtraLarge),
+                padding: const EdgeInsets.only(
+                    top: AppDimensions.paddingVeryExtraLarge),
                 child: Container(
                   height: 45,
                   child: Btn.basic(

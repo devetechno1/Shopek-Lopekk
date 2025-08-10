@@ -15,6 +15,7 @@ import 'package:active_ecommerce_cms_demo_app/single_banner/model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:one_context/one_context.dart';
+import 'package:provider/provider.dart';
 import '../custom/toast_component.dart';
 import '../data_model/address_response.dart';
 import '../data_model/category_response.dart';
@@ -26,6 +27,8 @@ import '../status/execute_and_handle_remote_errors.dart';
 import '../status/status.dart';
 import '../ui_elements/pop_up_banner.dart';
 import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
+
+import 'cart_provider.dart';
 
 class HomePresenter extends ChangeNotifier {
   CurrentRemainingTime flashDealRemainingTime =
@@ -109,6 +112,7 @@ class HomePresenter extends ChangeNotifier {
   int cartCount = 0;
 
   Future<void> fetchAll([bool isRefresh = false]) async {
+    final BuildContext context = OneContext().context!;
     await Future.wait([
       fetchAddressLists(isRefresh),
       fetchCarouselImages(),
@@ -127,6 +131,7 @@ class HomePresenter extends ChangeNotifier {
       fetchAuctionProducts(),
       fetchBrandsProducts(),
       fetchTodayDealProducts(),
+      Provider.of<CartProvider>(context, listen: false).fetchData(context),
     ]);
   }
 
@@ -291,6 +296,7 @@ class HomePresenter extends ChangeNotifier {
       MaterialPageRoute(builder: (_) => const AddressScreen()),
     ).then(
       (value) {
+        reset();
         fetchAll(true);
         return value;
       },

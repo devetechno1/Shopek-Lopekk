@@ -1,30 +1,33 @@
 import "package:active_ecommerce_cms_demo_app/constants/app_dimensions.dart";
 import "package:active_ecommerce_cms_demo_app/my_theme.dart";
 import "package:flutter/material.dart";
+import "package:one_context/one_context.dart";
 
 class Btn {
-  static Widget basic(
-      {
-
-        Color color = const Color.fromARGB(0, 0, 0, 0),
-      OutlinedBorder shape = const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppDimensions.radiusNormal))),
-      Widget child = const SizedBox(),
-      EdgeInsetsGeometry padding =
-          const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-      double? minWidth,
-      void Function()? onPressed}) {
+  static Widget basic({
+    Color color = const Color.fromARGB(0, 0, 0, 0),
+    bool isLoading = false,
+    OutlinedBorder shape = const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppDimensions.radiusNormal))),
+    Widget child = const SizedBox(),
+    EdgeInsetsGeometry padding =
+        const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+    double? minWidth,
+    void Function()? onPressed,
+  }) {
     //if (width != null && height != null)
     return TextButton(
       style: TextButton.styleFrom(
-          padding: padding,
-          backgroundColor: color,
-          // primary: MyTheme.noColor,
-          minimumSize: minWidth == null ? null : Size(minWidth, 10),
-          shape: shape),
+        padding: padding,
+        backgroundColor: color,
+        // primary: MyTheme.noColor,
+        minimumSize: minWidth == null ? null : Size(minWidth, 10),
+        disabledBackgroundColor: Theme.of(OneContext().context!).disabledColor,
+        shape: shape,
+      ),
       child: child,
-      onPressed: () => onPressed?.call(),
+      onPressed: isLoading ? null : () => onPressed?.call(),
     );
   }
 

@@ -27,7 +27,7 @@ class ShippingCostResponse {
       ShippingCostResponse(
         result: json["result"],
         shipping_type: json["shipping_type"],
-        value: double.parse(json["value"].toString()),
+        value: double.tryParse(json["value"].toString()),
         value_string: json["value_string"],
       );
 

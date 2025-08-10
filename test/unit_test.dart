@@ -5,14 +5,18 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:active_ecommerce_cms_demo_app/helpers/color_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:active_ecommerce_cms_demo_app/data_model/product_details_response.dart';
+import 'package:active_ecommerce_cms_demo_app/screens/product/product_details.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('Test color converter', () {
-    final Color? color = ColorHelper.stringToColor("050");
+  test('Test distributeWholesale calculator', () {
+    final int number = distributeWholesale(index: 0, total: 35, list: list);
 
-    expect(color, const Color(0xFFFFF050));
+    expect(number, 2);
   });
 }
+
+final List<Wholesale> list = [
+  Wholesale(minQty: 1, maxQty: 15),
+];

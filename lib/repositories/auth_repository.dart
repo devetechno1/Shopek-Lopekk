@@ -17,7 +17,7 @@ class AuthRepository {
     final postBody = jsonEncode({
       "email": "$email",
       "password": "$password",
-      if(AppConfig.deviceInfo.isNotEmpty) "device_info": AppConfig.deviceInfo,
+      if (AppConfig.deviceInfo.isNotEmpty) "device_info": AppConfig.deviceInfo,
       "identity_matrix": AppConfig.purchase_code,
       "login_by": loginBy,
       "temp_user_id": temp_user_id.$
@@ -50,7 +50,7 @@ class AuthRepository {
       "name": name,
       "email": email,
       "provider": "$provider",
-      if(AppConfig.deviceInfo.isNotEmpty) "device_info": AppConfig.deviceInfo,
+      if (AppConfig.deviceInfo.isNotEmpty) "device_info": AppConfig.deviceInfo,
       "social_provider": "$socialProvider",
       "access_token": "$access_token",
       "secret_token": "$secret_token"
@@ -103,10 +103,10 @@ class AuthRepository {
   ) async {
     final postBody = jsonEncode({
       "name": "$name",
-      if (email != null) "email": "$email",
+      if (email?.trim().isNotEmpty == true) "email": "$email",
       "phone": "$phone",
       "password": "$password",
-      if(AppConfig.deviceInfo.isNotEmpty) "device_info": AppConfig.deviceInfo,
+      if (AppConfig.deviceInfo.isNotEmpty) "device_info": AppConfig.deviceInfo,
       "password_confirmation": "$passowrdConfirmation",
       "g-recaptcha-response": "$capchaKey",
     });
@@ -155,9 +155,12 @@ class AuthRepository {
   }
 
   Future<PasswordForgetResponse> getPasswordForgetResponse(
-      String? emailOrPhone, String sendCodeBy) async {
-    final postBody = jsonEncode(
-        {"email_or_phone": "$emailOrPhone", "send_code_by": "$sendCodeBy"});
+      String? emailOrPhone, String sendCodeBy, String appSignature) async {
+    final postBody = jsonEncode({
+      "email_or_phone": "$emailOrPhone",
+      "send_code_by": "$sendCodeBy",
+      "app_signature": "$appSignature"
+    });
 
     const String url = ("${AppConfig.BASE_URL}/auth/password/forget_request");
 

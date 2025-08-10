@@ -390,9 +390,9 @@ class _ProfileState extends State<Profile> {
             color: MyTheme.light_grey,
           ),
           //flash_deals
-          Column(
-            children: [
-              if (homeData.isFlashDealInitial != false)
+          if (homeData.isFlashDealInitial != false)
+            Column(
+              children: [
                 buildBottomVerticalCardListItem(
                     AppImages.flashDeal, 'flash_deal_ucf'.tr(context: context),
                     onPressed: () {
@@ -400,12 +400,13 @@ class _ProfileState extends State<Profile> {
                     return FlashDealList();
                   }));
                 }),
-            ],
-          ),
-          Divider(
-            thickness: 1,
-            color: MyTheme.light_grey,
-          ),
+                Divider(
+                  thickness: 1,
+                  color: MyTheme.light_grey,
+                ),
+              ],
+            ),
+
           //flash_deals
           buildBottomVerticalCardListItem(
               AppImages.brands, 'brands_ucf'.tr(context: context),

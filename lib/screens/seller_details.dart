@@ -2234,7 +2234,7 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                           ),
                         ),
                       ),
-                    if (whole_sale_addon_installed.$ && widget.isWholesale!)
+                    if (whole_sale_addon_installed.$ && widget.isWholesale == true)
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 4),

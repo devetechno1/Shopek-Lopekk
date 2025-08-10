@@ -32,7 +32,6 @@ class _IndexState extends State<Index> {
     });
     AddonsHelper().setAddonsData();
     await Future.wait([
-      user_id.load(),
       temp_user_id.load(),
       app_language.load(),
       app_mobile_language.load(),

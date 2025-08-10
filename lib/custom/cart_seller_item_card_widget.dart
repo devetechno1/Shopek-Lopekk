@@ -1,13 +1,19 @@
 import 'package:active_ecommerce_cms_demo_app/app_config.dart';
+import 'package:active_ecommerce_cms_demo_app/helpers/num_ex.dart';
 import 'package:animated_text_lerp/animated_text_lerp.dart';
 import 'package:flutter/material.dart';
 
 import '../data_model/cart_response.dart';
+import '../data_model/product_details_response.dart';
+import '../helpers/system_config.dart';
 import '../my_theme.dart';
 import '../presenter/cart_provider.dart';
+import '../screens/product/product_details.dart';
 import 'box_decorations.dart';
 import 'device_info.dart';
 import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
+
+import 'wholesale_text_widget.dart';
 
 class CartSellerItemCardWidget extends StatelessWidget {
   final int sellerIndex;
@@ -25,6 +31,9 @@ class CartSellerItemCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CartItem item =
+        cartProvider.shopList[sellerIndex].cartItems![itemIndex];
+    final bool hasWholesale = makeNewVisualWholesale(item.wholesales);
     return Container(
       height: 120,
       decoration: BoxDecoration(
@@ -46,13 +55,11 @@ class CartSellerItemCardWidget extends StatelessWidget {
                     ),
                     child: FadeInImage.assetNetwork(
                       placeholder: AppImages.placeholder,
-                      image: cartProvider.shopList[sellerIndex]
-                          .cartItems![itemIndex].productThumbnailImage!,
+                      image: item.productThumbnailImage!,
                       fit: BoxFit.contain,
                     ),
                   ),
-                  if (cartProvider.shopList[sellerIndex].cartItems![itemIndex]
-                      .isNotAvailable)
+                  if (item.isNotAvailable)
                     Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -84,8 +91,7 @@ class CartSellerItemCardWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      cartProvider.shopList[sellerIndex].cartItems![itemIndex]
-                          .productName!,
+                      item.productName!,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
@@ -95,9 +101,7 @@ class CartSellerItemCardWidget extends StatelessWidget {
                     ),
                     AnimatedNumberText<double>(
                       double.tryParse(
-                            cartProvider.shopList[sellerIndex]
-                                .cartItems![itemIndex].price!
-                                .replaceAll(RegExp('[^0-9.]'), ''),
+                            item.price!.replaceAll(RegExp('[^0-9.]'), ''),
                           ) ??
                           0.0,
                       duration: const Duration(milliseconds: 500),
@@ -106,17 +110,30 @@ class CartSellerItemCardWidget extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
-                      formatter: (value) => '${value.toStringAsFixed(2)}',
+                      formatter: (value) {
+                        return '${value.withSeparator} ${SystemConfig.systemCurrency?.symbol ?? ''}'
+                            .trim();
+                      },
                     ),
+                    if (hasWholesale)
+                      WholesaleAddedData(
+                        itemIndex: itemIndex,
+                        sellerIndex: sellerIndex,
+                        auctionProduct: item.auctionProduct,
+                        wholesales: item.wholesales,
+                        cartProvider: cartProvider,
+                      ),
                     Builder(
                       builder: (context) {
                         String? text;
-                        final CartItem item = cartProvider
-                            .shopList[sellerIndex].cartItems![itemIndex];
                         if (item.quantity < item.minQuantity) {
-                          text = 'minimumOrderQuantity'.tr(context: context, args: {"minQuantity" : "${item.minQuantity}"});
+                          text = 'minimumOrderQuantity'.tr(
+                              context: context,
+                              args: {"minQuantity": "${item.minQuantity}"});
                         } else if (item.quantity > item.maxQuantity) {
-                          text = 'maxOrderQuantityLimit'.tr(context: context, args: {"maxQuantity" : "${item.maxQuantity}"});
+                          text = 'maxOrderQuantityLimit'.tr(
+                              context: context,
+                              args: {"maxQuantity": "${item.maxQuantity}"});
                         }
                         if (text == null) return const SizedBox();
                         return Center(
@@ -140,10 +157,9 @@ class CartSellerItemCardWidget extends StatelessWidget {
             Column(
               children: [
                 Visibility(
-                  visible: cartProvider
-                      .shopList[sellerIndex].cartItems![index].isLoading,
+                  visible: item.isLoading,
                   child: const Padding(
-                    padding: const EdgeInsets.all(AppDimensions.paddingSmall),
+                    padding: EdgeInsets.all(AppDimensions.paddingSmall),
                     child: SizedBox(
                       width: 24,
                       height: 24,
@@ -154,19 +170,25 @@ class CartSellerItemCardWidget extends StatelessWidget {
 
                 const Spacer(),
                 ////////////////////////////////////////////////
-                GestureDetector(
-                  onTap: () async {
-                    cartProvider.onPressDelete(
+                Padding(
+                  padding: hasWholesale
+                      ? const EdgeInsets.only(
+                          bottom: AppDimensions.paddingNormal,
+                          left: AppDimensions.paddingNormal,
+                          right: AppDimensions.paddingNormal,
+                        )
+                      : const EdgeInsets.only(
+                          bottom: AppDimensions.paddingNormal,
+                        ),
+                  child: GestureDetector(
+                    onTap: () async {
+                      cartProvider.onPressDelete(
                         context,
-                        cartProvider
-                            .shopList[sellerIndex].cartItems![itemIndex].id
-                            .toString(),
+                        item.id.toString(),
                         sellerIndex,
-                        itemIndex);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: AppDimensions.paddingNormal),
+                        itemIndex,
+                      );
+                    },
                     child: Image.asset(
                       AppImages.trash,
                       height: 16,
@@ -176,84 +198,156 @@ class CartSellerItemCardWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(AppDimensions.paddingDefault),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (cartProvider.shopList[sellerIndex]
-                              .cartItems![itemIndex].auctionProduct ==
-                          0) {
-                        cartProvider.onQuantityIncrease(
-                            context, sellerIndex, itemIndex);
-                      }
-                      return;
-                    },
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration:
-                          BoxDecorations.buildCartCircularButtonDecoration(),
-                      child: Icon(
-                        Icons.add,
-                        color: cartProvider.shopList[sellerIndex]
-                                    .cartItems![itemIndex].auctionProduct ==
-                                0
-                            ? Theme.of(context).primaryColor
-                            : MyTheme.grey_153,
-                        size: 12,
-                      ),
+            if (!hasWholesale)
+              Padding(
+                padding: const EdgeInsets.all(AppDimensions.paddingDefault),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _AddRemoveItemFromCart(
+                      icon: Icons.add,
+                      auctionProduct: item.auctionProduct,
+                      onTap: () {
+                        if (item.auctionProduct == 0) {
+                          cartProvider.onQuantityIncrease(
+                            context,
+                            sellerIndex,
+                            itemIndex,
+                          );
+                        }
+                        return;
+                      },
                     ),
-                  ),
-                  Padding(
+                    Padding(
                       padding: const EdgeInsets.only(
                         top: AppDimensions.paddingSmall,
                         bottom: AppDimensions.paddingSmall,
                       ),
                       child: Text(
-                        "${int.tryParse(
-                              cartProvider.shopList[sellerIndex]
-                                      .cartItems?[itemIndex].quantity
-                                      .toString() ??
-                                  '0',
-                            ) ?? 0}",
+                        "${int.tryParse(item.quantity.toString()) ?? 0}",
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 16,
                         ),
-                      )),
-                  GestureDetector(
-                    onTap: () {
-                      if (cartProvider.shopList[sellerIndex]
-                              .cartItems![itemIndex].auctionProduct ==
-                          0) {
-                        cartProvider.onQuantityDecrease(
-                            context, sellerIndex, itemIndex);
-                      }
-                      return;
-                    },
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration:
-                          BoxDecorations.buildCartCircularButtonDecoration(),
-                      child: Icon(
-                        Icons.remove,
-                        color: cartProvider.shopList[sellerIndex]
-                                    .cartItems![itemIndex].auctionProduct ==
-                                0
-                            ? Theme.of(context).primaryColor
-                            : MyTheme.grey_153,
-                        size: 12,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                    _AddRemoveItemFromCart(
+                      icon: Icons.remove,
+                      auctionProduct: item.auctionProduct,
+                      onTap: () {
+                        if (item.auctionProduct == 0) {
+                          cartProvider.onQuantityDecrease(
+                            context,
+                            sellerIndex,
+                            itemIndex,
+                          );
+                        }
+                        return;
+                      },
+                    ),
+                  ],
+                ),
+              )
           ]),
+    );
+  }
+}
+
+class _AddRemoveItemFromCart extends StatelessWidget {
+  final IconData icon;
+  final int? auctionProduct;
+  final void Function()? onTap;
+
+  const _AddRemoveItemFromCart({
+    required this.icon,
+    this.auctionProduct,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecorations.buildCartCircularButtonDecoration(),
+        child: Icon(
+          icon,
+          color: auctionProduct == 0
+              ? Theme.of(context).primaryColor
+              : MyTheme.grey_153,
+          size: 12,
+        ),
+      ),
+    );
+  }
+}
+
+class WholesaleAddedData extends StatelessWidget {
+  const WholesaleAddedData({
+    super.key,
+    required this.wholesales,
+    required this.cartProvider,
+    required this.sellerIndex,
+    required this.itemIndex,
+    required this.auctionProduct,
+  });
+
+  final List<Wholesale> wholesales;
+  final CartProvider cartProvider;
+  final int sellerIndex;
+  final int itemIndex;
+  final int? auctionProduct;
+
+  @override
+  Widget build(BuildContext context) {
+    final CartItem item =
+        cartProvider.shopList[sellerIndex].cartItems![itemIndex];
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: AppDimensions.paddingSmall,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: AppDimensions.paddingSmall,
+        children: [
+          _AddRemoveItemFromCart(
+            icon: Icons.add,
+            auctionProduct: auctionProduct,
+            onTap: () {
+              if (auctionProduct == 0) {
+                cartProvider.onQuantityIncrease(
+                  context,
+                  sellerIndex,
+                  itemIndex,
+                );
+              }
+              return;
+            },
+          ),
+          Expanded(
+            child: WholesaleTextWidget(
+              wholesales: wholesales,
+              quantity: item.quantity,
+            ),
+          ),
+          _AddRemoveItemFromCart(
+            icon: Icons.remove,
+            auctionProduct: auctionProduct,
+            onTap: () {
+              if (auctionProduct == 0) {
+                cartProvider.onQuantityDecrease(
+                  context,
+                  sellerIndex,
+                  itemIndex,
+                );
+              }
+              return;
+            },
+          ),
+        ],
+      ),
     );
   }
 }

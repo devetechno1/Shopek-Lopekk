@@ -1,4 +1,16 @@
 const Map<String, String> arLangs = {
+  "locationIsDenied": "تم رفض إذن الموقع.",
+  "locationIsDeniedPermanently":
+      "تم رفض إذن الموقع نهائيًا. من فضلك فعِّله من الإعدادات.",
+  "pleaseGoToVerifyYourLocation": "من فضلك تحقَّق من موقعك.",
+  "locationNotAccessed": "الوصول إلى الموقع غير مُفعَّل.",
+  "goToSetting": "اذهب إلى الإعدادات",
+  "change_default_address_make_cart_empty":
+      "سيؤدي تغيير العنوان الافتراضي إلى إفراغ السلة",
+  "pkg_price": "سعر العبوة",
+  "wholesale_pkg_name": "اسم باقة الجملة",
+  "pkg_quantity": "الكمية داخل العبوة",
+  "in_stock": "متوفر في المخزون",
   "add_default_address": "يرجى تحديد عنوان كافتراضي للمتابعة",
   "is_loading": "جارٍ التحميل...",
   "change_default_before_delete":
@@ -140,7 +152,7 @@ const Map<String, String> arLangs = {
   "featured_products_ucf": "المنتجات المميزة",
   "all_products_ucf": "جميع المنتجات",
   "search_in_app_name": "ابحث في {app_name} ...",
-  "app_name": "Shopek Lopek",
+  "app_name": "شبيك لبيك",
   "no_carousel_image_found": "لم يتم العثور على صورة دوّارة",
   "no_category_found": "لم يتم العثور على فئة",
   "categories_ucf": "الفئات",

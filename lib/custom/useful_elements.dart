@@ -28,30 +28,20 @@ class UsefulElements {
             : CupertinoIcons.arrow_left,
         color: color == 'white' ? Colors.white : MyTheme.dark_font_grey);
   }
-static Widget backToMain({color = 'black', go_back = true}) {
-  if (!go_back) return const SizedBox();
 
-  final icon = Icon(
-    app_language_rtl.$!
-        ? CupertinoIcons.arrow_right
-        : CupertinoIcons.arrow_left,
-    color: color == 'white' ? Colors.white : MyTheme.dark_font_grey,
-  );
-
-  return Row(
-    mainAxisAlignment:
-        app_language_rtl.$! ? MainAxisAlignment.end : MainAxisAlignment.start,
-    children: [
-      IconButton(
-        icon: icon,
-        onPressed: () => Navigator.push(
+  static Widget backToMain({color = 'black', go_back = true}) {
+    if (!go_back) return const SizedBox();
+    return IconButton(
+      icon: Icon(
+          app_language_rtl.$!
+              ? CupertinoIcons.arrow_right
+              : CupertinoIcons.arrow_left,
+          color: color == 'white' ? Colors.white : MyTheme.dark_font_grey),
+      onPressed: () => Navigator.push(
           OneContext().context!,
-          MaterialPageRoute(builder: (context) => const Main()),
-        ),
-      ),
-    ],
-  );
-}
+          MaterialPageRoute(builder: (context) => const Main())),
+    );
+  }
 
   static Widget roundImageWithPlaceholder(
       {String? url,

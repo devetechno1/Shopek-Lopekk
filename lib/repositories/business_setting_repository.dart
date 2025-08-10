@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:active_ecommerce_cms_demo_app/app_config.dart';
 import 'package:active_ecommerce_cms_demo_app/data_model/business_setting_response.dart';
 import 'package:active_ecommerce_cms_demo_app/repositories/api-request.dart';
+
+import '../helpers/shared_value_helper.dart';
 
 class BusinessSettingRepository {
   Future<BusinessSettingListResponse> getBusinessSettingList() async {
@@ -27,10 +28,12 @@ class BusinessSettingRepository {
     // ];
     // String params = businessSettings.join(',');
     // var body = {"keys": params};
-    log("Device info in config ${jsonEncode(AppConfig.deviceInfo)}");
-    final response = await ApiRequest.get(
-      url: url,
-    );
+    final response = await ApiRequest.get(url: url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (user_id.$ != null && is_logged_in.$) 'user_id': user_id.$.toString(),
+      'device_info': jsonEncode(AppConfig.deviceInfo),
+    });
 
     return businessSettingListResponseFromJson(response.body);
   }

@@ -7,6 +7,7 @@ import 'package:active_ecommerce_cms_demo_app/data_model/product_mini_response.d
 import 'package:active_ecommerce_cms_demo_app/data_model/variant_response.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/system_config.dart';
+import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
 import 'package:active_ecommerce_cms_demo_app/repositories/api-request.dart';
 import 'package:active_ecommerce_cms_demo_app/data_model/wholesale_model.dart';
 
@@ -153,6 +154,10 @@ class ProductRepository {
     final response = await ApiRequest.get(url: url, headers: {
       "App-Language": app_language.$!,
     });
+    if (response.statusCode != 200) {
+      throw jsonDecode(response.body)["message"]?.toString() ??
+          "some_things_went_wrong".tr();
+    }
 
     return productDetailsResponseFromJson(response.body);
   }

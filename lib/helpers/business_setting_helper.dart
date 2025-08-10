@@ -58,7 +58,6 @@ class BusinessSettingHelper {
     bool resetLang = true;
     await Future.wait([
       app_language.load(),
-      is_logged_in.load(),
       access_token.load(),
     ]);
     Language? defaultLang;

@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:one_context/one_context.dart';
 import 'package:validators/validators.dart';
 
 import '../../custom/loading.dart';
@@ -138,14 +139,15 @@ class _RegistrationState extends State<Registration> {
       );
       return;
     }
+    if(Loading.isLoading) return;
     Loading.show(context);
 
-    final String tempEmail =
-        email.trim().isEmpty ? "$_phone@email.com" : email.trim();
+    // final String tempEmail =
+    //     email.trim().isEmpty ? "$_phone@email.com" : email.trim();
 
     final signupResponse = await AuthRepository().getSignupResponse(
       name,
-      tempEmail,
+      email.trim(),
       _phone,
       password,
       passwordConfirm,
@@ -211,7 +213,7 @@ class _RegistrationState extends State<Registration> {
         if (AppConfig.businessSettingsData.sellerWiseShipping) {
           await homeData.handleAddressNavigation();
         }
-        context.push("/");
+        OneContext().context!.push("/");
 
         // Navigator.push(context, MaterialPageRoute(builder: (context) {
         //   return Home();

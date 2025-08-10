@@ -79,6 +79,11 @@ void main() async {
   AppConfig.storeType = await StoreType.thisDeviceType();
 
   await Future.wait([
+    user_id.load(),
+    is_logged_in.load(),
+  ]);
+
+  await Future.wait([
     BusinessSettingHelper().setBusinessSettingData(),
     BusinessSettingHelper.setInitLang(),
     Firebase.initializeApp(),

@@ -274,25 +274,37 @@ class ChoiceOption {
 }
 
 class Wholesale {
-  var minQty;
-  var maxQty;
-  var price;
+  int minQty;
+  int? maxQty;
+  String? price;
+  double priceDouble;
+  String? name;
 
   Wholesale({
-    this.minQty,
+    this.minQty = 0,
     this.maxQty,
     this.price,
+    this.priceDouble = 0.0,
+    this.name,
   });
 
-  factory Wholesale.fromJson(Map<String, dynamic> json) => Wholesale(
-        minQty: json["min_qty"],
-        maxQty: json["max_qty"],
-        price: json["price"],
-      );
+  factory Wholesale.fromJson(Map<String, dynamic> json) {
+    return Wholesale(
+      minQty: int.tryParse("${json["min_qty"]}") ?? 0,
+      maxQty: int.tryParse("${json["max_qty"]}"),
+      price: json["price"] == null ? null : "${json["price"]}".trim(),
+      priceDouble: double.tryParse("${json["price_double"]}") ??
+          double.tryParse("${json["price"]}") ??
+          0,
+      name: json["name"] as String?,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "min_qty": minQty,
         "max_qty": maxQty,
         "price": price,
+        "name": name,
+        "price_double": priceDouble,
       };
 }

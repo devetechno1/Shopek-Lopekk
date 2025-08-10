@@ -5,7 +5,6 @@ import 'package:active_ecommerce_cms_demo_app/custom/input_decorations.dart';
 import 'package:active_ecommerce_cms_demo_app/custom/toast_component.dart';
 import 'package:active_ecommerce_cms_demo_app/my_theme.dart';
 import 'package:active_ecommerce_cms_demo_app/repositories/auth_repository.dart';
-import 'package:active_ecommerce_cms_demo_app/screens/auth/login.dart';
 import 'package:active_ecommerce_cms_demo_app/screens/auth/otp.dart';
 import 'package:active_ecommerce_cms_demo_app/ui_elements/auth_ui.dart';
 import 'package:flip_card/flip_card.dart';
@@ -13,6 +12,8 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
+import 'package:one_context/one_context.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
 class PasswordOtp extends StatefulWidget {
@@ -25,9 +26,9 @@ class PasswordOtp extends StatefulWidget {
   _PasswordOtpState createState() => _PasswordOtpState();
 }
 
-class _PasswordOtpState extends State<PasswordOtp> {
+class _PasswordOtpState extends State<PasswordOtp>  with CodeAutoFill{
   //controllers
-  final TextEditingController _codeController = TextEditingController();
+  String _code = '';
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
@@ -45,6 +46,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
       headeText = 'enter_the_code_sent'.tr(context: context);
       setState(() {});
     });
+
+    SmsAutoFill().listenForCode();
     //on Splash Screen hide statusbar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
@@ -53,7 +56,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
 
   @override
   void dispose() {
-    _codeController.dispose();
+    SmsAutoFill().unregisterListener();
+    cancel();
     _passwordController.dispose();
     _passwordConfirmController.dispose();
     countdownController.pause();
@@ -64,11 +68,11 @@ class _PasswordOtpState extends State<PasswordOtp> {
   }
 
   Future<void> onPressConfirm() async {
-    final code = _codeController.text.toString();
+    // final code = _codeController.text.toString();
     final password = _passwordController.text.toString();
     final passwordConfirm = _passwordConfirmController.text.toString();
 
-    if (code == "") {
+    if (_code.trim().isEmpty) {
       ToastComponent.showDialog(
         'enter_the_code'.tr(context: context),
       );
@@ -96,7 +100,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
     }
 
     final passwordConfirmResponse =
-        await AuthRepository().getPasswordConfirmResponse(code, password);
+        await AuthRepository().getPasswordConfirmResponse(_code, password);
 
     if (passwordConfirmResponse.result == false) {
       ToastComponent.showDialog(
@@ -118,7 +122,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
       canResend = false;
     });
     final passwordResendCodeResponse = await AuthRepository()
-        .getPasswordForgetResponse(widget.email_or_code, widget.verify_by);
+        .getPasswordForgetResponse(widget.email_or_code, widget.verify_by, await SmsAutoFill().getAppSignature);
 
     if (passwordResendCodeResponse.result == false) {
       ToastComponent.showDialog(
@@ -132,8 +136,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
   }
 
   gotoLoginScreen() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Login()));
+    Navigator.pop(context);
+    Navigator.pop(OneContext().context!);
   }
 
   @override
@@ -146,7 +150,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
         WillPopScope(
             onWillPop: () {
               gotoLoginScreen();
-              return Future.delayed(Duration.zero);
+              return Future.value(false);
             },
             child: buildBody(context, _screen_width, _verify_by)));
   }
@@ -170,12 +174,14 @@ class _PasswordOtpState extends State<PasswordOtp> {
                   width: _screen_width * (3 / 4),
                   child: _verify_by == "email"
                       ? Text(
-                          'enter_the_verification_code_that_sent_to_your_email_recently'.tr(context: context),
+                          'enter_the_verification_code_that_sent_to_your_email_recently'
+                              .tr(context: context),
                           textAlign: TextAlign.center,
                           style:
                               TextStyle(color: MyTheme.dark_grey, fontSize: 14))
                       : Text(
-                          'check_your_WhatsApp_messages_to_retrieve_the_verification_code'.tr(context: context),
+                          'check_your_WhatsApp_messages_to_retrieve_the_verification_code'
+                              .tr(context: context),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: MyTheme.dark_grey, fontSize: 14))),
@@ -189,7 +195,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
                     padding: const EdgeInsets.only(
                         bottom: AppDimensions.paddingSmallExtra),
                     child: Text(
-                      'enter_the_code'.tr(context: context),
+                      'code'.tr(context: context),
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w600),
@@ -201,13 +207,14 @@ class _PasswordOtpState extends State<PasswordOtp> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Container(
-                          height: 36,
-                          child: TextField(
-                            controller: _codeController,
-                            autofocus: false,
+                        SizedBox(
+                          height: 55,
+                          child: TextFieldPinAutoFill(
+                            currentCode: _code,
+                            onCodeChanged: (val) => _code = val.trim(),
                             decoration: InputDecorations.buildInputDecoration_1(
-                                hint_text: "A X B 4 J H"),
+                              hint_text: 'enter_the_code'.tr(context: context),
+                            ),
                           ),
                         ),
                       ],
@@ -242,7 +249,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
                           ),
                         ),
                         Text(
-                          'password_must_contain_at_least_6_characters'.tr(context: context),
+                          'password_must_contain_at_least_6_characters'
+                              .tr(context: context),
                           style: const TextStyle(
                               color: MyTheme.textfield_grey,
                               fontStyle: FontStyle.italic),
@@ -328,7 +336,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
               child: Visibility(
                 visible: !canResend,
                 child: TimerWidget(
-                  duration: const Duration(seconds: 20),
+                  duration: const Duration(seconds: 90),
                   callback: () {
                     setState(() {
                       countdownController.restart();
@@ -364,7 +372,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
               child: Container(
                   width: _screen_width * (3 / 4),
                   child: Text(
-                      'you_have_successfully_changed_your_password'.tr(context: context),
+                      'you_have_successfully_changed_your_password'
+                          .tr(context: context),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
@@ -379,8 +388,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.only(top: AppDimensions.paddingVeryExtraLarge),
+              padding: const EdgeInsets.only(
+                  top: AppDimensions.paddingVeryExtraLarge),
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 height: 45,
@@ -407,5 +416,11 @@ class _PasswordOtpState extends State<PasswordOtp> {
         ),
       ),
     );
+  }
+  
+  @override
+  void codeUpdated() {
+    _code = code ?? '';
+    setState(() {});
   }
 }

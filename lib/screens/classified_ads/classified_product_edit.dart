@@ -287,7 +287,7 @@ class _ClassifiedProductEditState extends State<ClassifiedProductEdit> {
         appBar: AppBar(
           elevation: 0,
           title: Text(
-            "Add New Classified Product",
+            "add_new_classified_product_ucf".tr(context: context),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

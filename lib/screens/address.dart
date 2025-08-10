@@ -13,18 +13,21 @@ import 'package:active_ecommerce_cms_demo_app/locale/custom_localization.dart';
 import 'package:active_ecommerce_cms_demo_app/my_theme.dart';
 import 'package:active_ecommerce_cms_demo_app/repositories/address_repository.dart';
 import 'package:active_ecommerce_cms_demo_app/screens/map_location.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:one_context/one_context.dart';
+import 'package:provider/provider.dart';
 
 import '../app_config.dart';
 import '../custom/input_decorations.dart';
 import '../custom/intl_phone_input.dart';
+import '../custom/loading.dart';
 import '../custom/useful_elements.dart';
 import '../data_model/address_add_response.dart';
 import '../data_model/address_response.dart' as res;
+import '../presenter/cart_counter.dart';
 import 'add_address_screen.dart';
 
 // class Address extends StatelessWidget {
@@ -171,6 +174,63 @@ class _AddressScreenState extends State<AddressScreen> {
   afterUpdatingAnAddress() {
     reset();
     fetchAll();
+  }
+
+  Future<void> onTapAddressToSwitch(int? id) async {
+    bool canSwitch = true;
+    final CartCounter cart = Provider.of<CartCounter>(context, listen: false);
+    if (AppConfig.businessSettingsData.sellerWiseShipping &&
+        cart.cartCounter > 0) {
+      canSwitch = await showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              contentPadding: const EdgeInsets.only(
+                top: 16.0,
+                left: 2.0,
+                right: 2.0,
+                bottom: 2.0,
+              ),
+              content: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 16.0,
+                ),
+                child: Text(
+                  'change_default_address_make_cart_empty'.tr(context: context),
+                  maxLines: 3,
+                  style: const TextStyle(
+                    color: MyTheme.font_grey,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              actions: [
+                Btn.basic(
+                  child: Text(
+                    'cancel_ucf'.tr(context: context),
+                    style: TextStyle(color: MyTheme.medium_grey),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop(false);
+                  },
+                ),
+                Btn.basic(
+                  color: MyTheme.soft_accent_color,
+                  child: Text(
+                    'confirm_ucf'.tr(context: context),
+                    style: TextStyle(color: MyTheme.dark_grey),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop(true);
+                  },
+                ),
+              ],
+            ),
+          ) ==
+          true;
+    }
+    if (!canSwitch) return;
+    return onAddressSwitch(id);
   }
 
   Future<void> onAddressSwitch(int? id) async {
@@ -390,6 +450,10 @@ class _AddressScreenState extends State<AddressScreen> {
                                   addressEntity.longitude ??
                                       AppConfig.initPlace.longitude,
                                 );
+                                if(Loading.isLoading) return;
+
+                                Loading.show(OneContext().context!);
+                                
                                 final AddressAddResponse addressAddResponse =
                                     await AddressRepository()
                                         .getAddressAddResponse(
@@ -425,6 +489,8 @@ class _AddressScreenState extends State<AddressScreen> {
                                   selectedPlace: latLang,
                                 );
                                 await afterAddingAnAddress(true);
+
+                                Loading.close();
                               },
                             ),
                           ),
@@ -587,7 +653,7 @@ class _AddressScreenState extends State<AddressScreen> {
           return;
         }
         if (_default_shipping_address != _shippingAddressList[index].id) {
-          onAddressSwitch(_shippingAddressList[index].id);
+          onTapAddressToSwitch(_shippingAddressList[index].id);
         }
       },
       child: AnimatedContainer(

@@ -5,6 +5,8 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'product_details_response.dart';
+
 CartResponse cartResponseFromJson(String str) =>
     CartResponse.fromJson(json.decode(str));
 
@@ -85,10 +87,11 @@ class CartItem {
   int upperLimit;
   int? _maxQty;
   bool isLoading;
+  List<Wholesale> wholesales;
   int get maxQuantity => min(upperLimit, _maxQty ?? upperLimit);
   int get minQuantity => lowerLimit ?? 1;
 
-  bool get isNotAvailable => maxQuantity < quantity  || quantity < minQuantity;
+  bool get isNotAvailable => maxQuantity < quantity || quantity < minQuantity;
 
   CartItem({
     this.id,
@@ -108,6 +111,7 @@ class CartItem {
     this.upperLimit = 0,
     int? maxQty,
     this.isLoading = false,
+    this.wholesales = const [],
   }) {
     _maxQty = maxQty;
   }
@@ -129,6 +133,10 @@ class CartItem {
         quantity: json["quantity"] ?? 0,
         lowerLimit: json["lower_limit"],
         upperLimit: json["upper_limit"] ?? 0,
+        wholesales: json["wholesale_variation"] == null
+            ? []
+            : List<Wholesale>.from((json["wholesale_variation"] as List)
+                .map((x) => Wholesale.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -148,5 +156,6 @@ class CartItem {
         "quantity": quantity,
         "lower_limit": lowerLimit,
         "upper_limit": upperLimit,
+        "wholesale_variation": List<dynamic>.from(wholesales.map((x) => x.toJson())),
       };
 }

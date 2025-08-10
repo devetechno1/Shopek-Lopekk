@@ -15,7 +15,7 @@ class ProductLoadingcontainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: homeData.showAllLoadingContainer ? 36 : 0,
+      height: homeData.showAllLoadingContainer ? 40 : 0,
       width: double.infinity,
       color: Colors.white,
       child: Center(

@@ -9,6 +9,7 @@ import 'package:active_ecommerce_cms_demo_app/custom/fade_network_image.dart';
 import 'package:active_ecommerce_cms_demo_app/custom/toast_component.dart';
 import 'package:active_ecommerce_cms_demo_app/custom/useful_elements.dart';
 import 'package:active_ecommerce_cms_demo_app/data_model/delivery_info_response.dart';
+import 'package:active_ecommerce_cms_demo_app/helpers/num_ex.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_cms_demo_app/helpers/system_config.dart';
@@ -23,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_config.dart';
+import '../../custom/wholesale_text_widget.dart';
+import '../product/product_details.dart';
 
 class ShippingInfo extends StatefulWidget {
   final String? guestCheckOutShippingAddress;
@@ -1032,6 +1035,8 @@ class _ShippingInfoState extends State<ShippingInfo> {
   }
 
   Container buildCartSellerItemCard(itemIndex, sellerIndex) {
+    final CartItem item = _deliveryInfoList[sellerIndex].cartItems![itemIndex];
+    final bool hasWholesale = makeNewVisualWholesale(item.wholesales);
     return Container(
       height: 100,
       decoration: BoxDecorations.buildBoxDecoration_1(),
@@ -1046,9 +1051,7 @@ class _ShippingInfoState extends State<ShippingInfo> {
                   right: Radius.zero),
               child: FadeInImage.assetNetwork(
                 placeholder: AppImages.placeholder,
-                image: _deliveryInfoList[sellerIndex]
-                    .cartItems![itemIndex]
-                    .productThumbnailImage!,
+                image: item.productThumbnailImage!,
                 fit: BoxFit.cover,
               ),
             ),
@@ -1060,13 +1063,12 @@ class _ShippingInfoState extends State<ShippingInfo> {
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: AppDimensions.paddingDefault,
               children: [
-                Expanded(
+                Flexible(
                   child: Text(
-                    _deliveryInfoList[sellerIndex]
-                        .cartItems![itemIndex]
-                        .productName!,
+                    item.productName!,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: const TextStyle(
@@ -1076,26 +1078,39 @@ class _ShippingInfoState extends State<ShippingInfo> {
                   ),
                 ),
                 Builder(builder: (context) {
-                  String priceWithCurrency = SystemConfig.systemCurrency != null
-                      ? "${_deliveryInfoList[sellerIndex].cartItems![itemIndex].productPrice}"
-                          .replaceAll(SystemConfig.systemCurrency!.code!,
-                              SystemConfig.systemCurrency!.symbol!)
-                      : "${_deliveryInfoList[sellerIndex].cartItems![itemIndex].productPrice}";
-                  if (SystemConfig.systemCurrency?.symbol != null &&
-                      !priceWithCurrency
-                          .contains("${SystemConfig.systemCurrency?.symbol}")) {
-                    priceWithCurrency +=
-                        " ${SystemConfig.systemCurrency!.symbol!}";
+                  // String priceWithCurrency = SystemConfig.systemCurrency != null
+                  //     ? "${item.productPrice}".replaceAll(
+                  //         SystemConfig.systemCurrency!.code!,
+                  //         SystemConfig.systemCurrency!.symbol!)
+                  //     : "${item.productPrice}";
+                  // if (SystemConfig.systemCurrency?.symbol != null &&
+                  //     !priceWithCurrency
+                  //         .contains("${SystemConfig.systemCurrency?.symbol}")) {
+                  //   priceWithCurrency +=
+                  //       " ${SystemConfig.systemCurrency!.symbol!}";
+                  // }
+                  final String total =
+                      "${((item.productPrice ?? 0) * (item.productQuantity ?? 0)).withSeparator} ${SystemConfig.systemCurrency?.symbol ?? ''}";
+                  if (hasWholesale) {
+                    return WholesaleTextWidget(
+                      textAfter: "\n$total",
+                      wholesales: item.wholesales,
+                      quantity: item.productQuantity ?? 0,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    );
                   }
+
                   return Text(
-                    "$priceWithCurrency × ${_deliveryInfoList[sellerIndex].cartItems![itemIndex].productQuantity}",
+                    "${item.productQuantity} × ${item.productPrice.withSeparator} = $total",
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700),
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   );
                 }),
               ],

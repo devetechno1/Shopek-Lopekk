@@ -16,7 +16,9 @@ Map<String, String> get commonHeader => {
       "Content-Type": "application/json",
       "App-Language": app_language.$ ?? AppConfig.default_language,
       "Accept": "application/json",
-      "System-Key": AppConfig.system_key
+      "System-Key": AppConfig.system_key,
+      if (access_token.$?.trim().isNotEmpty == true)
+        "Authorization": "Bearer ${access_token.$}",
     };
 Map<String, String> get authHeader =>
     {"Authorization": "Bearer ${access_token.$}"};
